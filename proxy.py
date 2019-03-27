@@ -88,8 +88,8 @@ def ProxyClientCommand(sock, server_addr, server_port, cache):
     max_age_in_sec: float. Cached values older than this are re-retrieved from
       the server.
   """
-   command_line = library.ReadCommand(sock)
-   cmd, name, text = library.ParseCommand(command_line)
+    command_line = library.ReadCommand(sock)
+    cmd, name, text = library.ParseCommand(command_line)
 
     response = ForwardCommandToServer(command_line,server_addr,server_port)
 
