@@ -1,4 +1,3 @@
-drive.web-frontend_20190313.00_p0
 """A server to store and retrieve key/value pairs using a socket interface.
 
 Once it's running on your machine, you can test it by connecting to it
@@ -37,6 +36,7 @@ from __future__ import print_function
 # A few commands are used by both the server and the proxy server. Those
 # functions are in library.py.
 import library
+import socket
 
 
 # The port that we accept connections on. (A.k.a. "listen" on.)
@@ -58,9 +58,8 @@ def PutCommand(name, text, database):
     then the string describes the error.
   """
   # Store the value in the database.
-  ##########################################
-  #TODO: Implement PUT function
-  ##########################################
+  database.StoreValue(name,text)
+  return '%s = %s\n' %(name, text)
 
 
 def GetCommand(name, database):
@@ -75,9 +74,11 @@ def GetCommand(name, database):
     A human readable string describing the result. If there is an error,
     then the string describes the error.
   """
-  ##########################################
-  #TODO: Implement GET function
-  ##########################################
+  value = database.GetValue(name)
+  if value:
+      return value
+  else:
+      return 'Key Not Found'
 
 
 def DumpCommand(database):
@@ -91,12 +92,14 @@ def DumpCommand(database):
     A human readable string describing the result. If there is an error,
     then the string describes the error.
   """
+  templist = []
+  if database.Keys():
+      keylist = database.Keys()
+      keylist = ' '.join(keylist)
+      return keylist
+  else:
+      return 'There is nothing to Dump'
 
-  ##########################################
-  #TODO: Implement DUMP function
-  ##########################################
-  
- 
 
 
 def SendText(sock, text):
@@ -107,6 +110,7 @@ def SendText(sock, text):
 def main():
   # Store all key/value pairs in here.
   database = library.KeyValueStore()
+
   # The server socket that will listen on the specified port. If you don't
   # have permission to listen on the port, try a higher numbered port.
   server_sock = library.CreateServerSocket(LISTENING_PORT)
@@ -118,7 +122,7 @@ def main():
     client_sock, (address, port) = library.ConnectClientToServer(server_sock)
     print('Received connection from %s:%d' % (address, port))
 
-    # Read a command.
+    # # Read a command.
     command_line = library.ReadCommand(client_sock)
     command, name, text = library.ParseCommand(command_line)
 
@@ -132,14 +136,10 @@ def main():
     else:
       SendText(client_sock, 'Unknown command %s' % command)
 
-    SendText(client_sock, result)
 
     # We're done with the client, so clean up the socket.
 
-    #################################
-    #TODO: Close socket's connection
-    #################################
-    
+    client_sock.close()
 
 
 main()
