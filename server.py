@@ -128,20 +128,16 @@ def main():
     # Execute the command based on the first word in the command line.
     if command == 'PUT':
       result = PutCommand(name, text, database)
-      print(result)
     elif command == 'GET':
       result = GetCommand(name, database)
-      print(result)
     elif command == 'DUMP':
       result = DumpCommand(database)
-      print(result)
-
     else:
       SendText(client_sock, 'Unknown command %s' % command)
 
+    SendText(client_sock, result)
 
     # We're done with the client, so clean up the socket.
-
     client_sock.close()
 
 
