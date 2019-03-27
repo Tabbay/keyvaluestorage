@@ -51,26 +51,13 @@ def ForwardCommandToServer(command, server_addr, server_port):
 def CheckCachedResponse(command_line, cache):
   cmd, name, text = library.ParseCommand(command_line)
 
-  # Update the cache for PUT commands but also pass the traffic to the server.
-  ##########################
-  #TODO: Implement section
-  ##########################
-
      if cmd == 'PUT':
          return cache.StoreValue(name,text)
+
      elif cmd == 'GET':
-         return cache.GetValue(name,60.0)
+         return cache.GetValue(name)
      else:
          return None
-
-
-
-  # GET commands can be cached.
-
-  ############################
-  #TODO: Implement section
-  ############################
-
 
 
 def ProxyClientCommand(sock, server_addr, server_port, cache):
@@ -112,6 +99,7 @@ def main():
     client_sock, (address, port) = library.ConnectClientToServer(server_sock)
     print('Received connection from %s:%d' % (address, port))
     ProxyClientCommand(client_sock, SERVER_ADDRESS, SERVER_PORT,cache)
+
     client_sock.close()
 
  main()
