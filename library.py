@@ -102,14 +102,14 @@ class KeyValueStore(object):
           None or the value.
         """
         # Check if we've ever put something in the cache.
-        if not dictionary:
-            return None
+        if not self.dictionary:
+            return 'Doesnt Exist in Cache'
         elif self.dictionary[key] > max_age_in_sec:
             return
         elif key in self.dictionary.keys():
             return self.dictionary[key]
         else:
-            return None
+            return 'Value for Key Does not Exist '
 
 
     def StoreValue(self, key, value):

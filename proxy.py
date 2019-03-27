@@ -56,9 +56,12 @@ def CheckCachedResponse(command_line, cache):
   #TODO: Implement section
   ##########################
 
-     if cmd == 'PUT': =
-      ForwardCommandToServer()
-      cache.StoreValue(name,text)
+     if cmd == 'PUT':
+         return cache.StoreValue(name,text)
+     elif cmd == 'GET':
+         return cache.GetValue(name,60.0)
+     else:
+         return None
 
 
 
@@ -88,20 +91,13 @@ def ProxyClientCommand(sock, server_addr, server_port, cache):
    command_line = library.ReadCommand(sock)
    cmd, name, text = library.ParseCommand(command_line)
 
-    if cmd == 'PUT': =
-     response_message = ForwardCommandToServer(command_line,server_addr,server_port)
-     cache.StoreValue(name,text)
-    elif cmd == 'GET':
-     ForwardCommandToServer(command_line,server_addr,server_port)
-     response_message = cache.GetValue(name,60.0)
-     if response_message == None:
-         response_message = ForwardCommandToServer(command_line,server_addr,server_port)
+    response = ForwardCommandToServer(command_line,server_addr,server_port)
+
+    checkedResponse = CheckCachedResponse(command_line, cache):
+    if checkedResponse == None:
+        sock.send(response)
     else:
-         response_message = ForwardCommandToServer(command_line,server_addr,server_port)
-
-    sock.send(response_message)
-
-
+        sock.send(checkedResponse)
 
 
 

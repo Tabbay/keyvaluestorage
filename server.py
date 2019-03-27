@@ -75,11 +75,11 @@ def GetCommand(name, database):
     then the string describes the error.
   """
   value = database.GetValue(name)
-  if value:
-      return value
+  if not value:
+      return 'Value for Key Does not Exist'
   else:
-      return 'Key Not Found'
-
+      print(value)
+      return value
 
 def DumpCommand(database):
   """Creates a function to handle the DUMP command for a server.
@@ -92,13 +92,12 @@ def DumpCommand(database):
     A human readable string describing the result. If there is an error,
     then the string describes the error.
   """
-  templist = []
   if database.Keys():
       keylist = database.Keys()
       keylist = ' '.join(keylist)
       return keylist
   else:
-      return 'There is nothing to Dump'
+      return 'There is Nothing to Dump'
 
 
 
@@ -129,10 +128,14 @@ def main():
     # Execute the command based on the first word in the command line.
     if command == 'PUT':
       result = PutCommand(name, text, database)
+      print(result)
     elif command == 'GET':
       result = GetCommand(name, database)
+      print(result)
     elif command == 'DUMP':
       result = DumpCommand(database)
+      print(result)
+
     else:
       SendText(client_sock, 'Unknown command %s' % command)
 
